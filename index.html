@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Communicate Iframe Events -- Parent</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+
+    }
+
+    html {
+      font-family: sans-serif;
+      background-color: rgba(224, 247, 250, 0.45);
+    }
+
+    body {
+      margin: 0;
+    }
+
+    div {
+      margin: auto;
+      min-height: 100%;
+      padding: 1em;
+      box-sizing: border-box;
+    }
+
+    iframe {
+      border: none;
+      box-shadow: 0 0 9px 1px rgba(93, 93, 93, 0.66);
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <h1>Parent Iframe</h1>
+    <iframe src="iframe.html"></iframe>
+    <p><small>View result in console <em>console.dir(event.detail);</em></small> - <span></span></span></p>
+  </div>
+
+
+  <script>
+    window.addEventListener('request-provider', (event) => {
+      console.dir(event.detail);
+      const btn = event.detail.originalTarget;
+      document.querySelector('span').append(btn);
+    });
+    const iframe = document.querySelector('iframe');
+    iframe.addEventListener('load', () => {
+      const iframePart = iframe.contentDocument.documentElement;
+      iframePart.addEventListener('request-provider', (event) => {
+        if (window.confirm('Disabled Iframe button?')) {
+          event.detail.provider = true;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        document.documentElement.dispatchEvent(new CustomEvent('request-provider', event));
+      })
+    });
+
+  </script>
+</body>
+
+</html>
