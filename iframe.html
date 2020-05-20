@@ -29,8 +29,8 @@
       let eventP = new CustomEvent('request-provider', {
         detail: {
           originalEvent: event,
-          originalPath: event.path,
-          originalTarget: event.path[0]
+          originalPath: event.composedPath(),
+          originalTarget: event.composedPath()[0],
         },
         bubbles: true,
         cancelable: true,
